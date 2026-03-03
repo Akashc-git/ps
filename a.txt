@@ -920,6 +920,42 @@
       "}"
     ],
     "description": "Quiz with negative marking"
+  },
+
+"21. API fetch with Retry": {
+    "prefix": "-fetchwithretry",
+    "body": [
+      "async function fetchWithRetry(symbol, retries = 3, delay = 25000) {",
+      "    const url = `https://cors-anywhere.com/https://query1.finance.yahoo.com/v8/finance/chart/${symbol}`;",
+      "",
+      "    for (let attempt = 1; attempt <= retries; attempt++) {",
+      "        try {",
+      "            const response = await fetch(url);",
+      "",
+      "            if (!response.ok) {",
+      "                throw new Error(`HTTP Error: ${response.status}`);",
+      "            }",
+      "",
+      "            const result = await response.json();",
+      "            const price = result.chart.result[0].meta.regularMarketPrice;",
+      "",
+      "            console.log(`${symbol} Regular Market Price:`, price);",
+      "            return;",
+      "",
+      "        } catch (error) {",
+      "            console.error(`Attempt ${attempt} failed for ${symbol}:`, error);",
+      "",
+      "            if (attempt === retries) {",
+      "                console.error(`All retries failed for ${symbol}`);",
+      "                return;",
+      "            }",
+      "",
+      "            await new Promise(resolve => setTimeout(resolve, delay));",
+      "        }",
+      "    }",
+      "}"
+    ],
+    "description": "Fetch stock price from Yahoo Finance with retry logic"
   }
 
 }
